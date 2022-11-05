@@ -1,0 +1,72 @@
+---
+- name: DEPLOY LARAVEL
+  hosts: all
+  become: yes
+  roles:
+   - someConfig_and_Php
+   - mysql
+   - EncryptSSL
+  tasks:
+    - name: Install Composer
+      apt:
+        name:
+          - git
+          - composer
+        state: present
+        update_cache: yes
+    - name: Check if already cloned
+      stat:
+        path: /var/www/html/laravel
+      register: result
+    - name: git clone the repo
+      git:
+        repo: https://github.com/f1amy/laravel-realworld-example-app.git
+        dest: /var/www/html/laravel
+        clone: yes
+        update: yes
+      when: not result.stat.exists
+    - name: composer install
+      composer:
+        command: install
+        working_dir: /var/www/html/laravel
+      environment:
+        COMPOSER_ALLOW_SUPERUSER: "1"
+        COMPOSER_NO_INTERACTION: "1"
+    - name: Copy .env filee
+      copy:
+        src: ./env.example
+        dest: /var/www/html/laravel/.env
+    - name: genrate
+      shell: php artisan key:generate
+      args:
+        chdir: /var/www/html/laravel
+    - name: some command necessary
+      command: "{{ item }}"
+      with_items:
+      - chown -R :www-data /var/www/html/laravel
+      - chmod -R 775 /var/www/html/laravel
+      - chmod -R 775 /var/www/html/laravel/storage
+    - name: Copy .conf filee
+      copy:
+        src: ./laravel.conf
+        dest: /etc/apache2/sites-available/laravel.conf
+    - name: change web.php file
+      copy:
+        src: ./web.example
+        dest: /var/www/html/laravel/routes/web.php
+    - name: ensite and dissite
+      shell: "{{ item }}"
+      with_items:
+      - sudo a2dissite 000-default.conf
+      - sudo a2ensite laravel.conf
+      - systemctl restart apache2
+- name: Install PostgresSql
+  hosts: all
+  tasks:
+   - name: Copy Installation script
+     copy:
+       src: ./InstallPostgresql
+       dest: /home/ubuntu
+       mode: 0777
+   - name: Install Postgres
+     command: bash /home/ubuntu/InstallPostgresql

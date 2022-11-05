@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo certbot --apache --agree-tos --redirect -m awwalmustapha41@email.com -d altschoollaravelbyawwal.me -d www.altschoollaravelbyawwal.me <<< 2

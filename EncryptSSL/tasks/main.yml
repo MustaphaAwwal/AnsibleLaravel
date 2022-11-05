@@ -1,0 +1,24 @@
+---
+# tasks file for EncryptSSL
+- name: get snapd
+  apt: name=snapd state=present update_cache=yes
+- name: get core
+  command: sudo snap install core
+- name: let snap refresh core
+  command: sudo snap refresh core
+- name: Install Certbot and comple
+  command: sudo snap install --classic certbot
+- name: copy linkssl
+  copy:
+    src: ./linkssl
+    dest: /home/ubuntu
+- name: check if cert is issue
+  stat: path=/snap/bin/certbot
+  register: links
+- name: link and issue the cert 
+  command: "{{ item }}"
+  with_items:
+  - sudo ln -s /snap/bin/certbot /usr/bin/certbot
+  - bash /home/ubuntu/linkssl
+  when: not links.stat.islnk is defined and links.stat.islnk
+
