@@ -1,4 +1,0 @@
-- name: jj
-  hosts: all
-  roles:
-  - EncryptSSL
