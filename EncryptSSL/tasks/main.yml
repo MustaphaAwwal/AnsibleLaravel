@@ -13,12 +13,12 @@
     src: ./linkssl
     dest: /home/ubuntu
 - name: check if cert is issue
-  stat: path=/snap/bin/certbot
+  stat: path=/usr/bin/certbot
   register: links
 - name: link and issue the cert 
   command: "{{ item }}"
   with_items:
   - sudo ln -s /snap/bin/certbot /usr/bin/certbot
   - bash /home/ubuntu/linkssl
-  when: not links.stat.islnk is defined and links.stat.islnk
+  when: not links.stat.exists
 
