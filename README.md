@@ -1,8 +1,7 @@
 # AltschoolExam
-**This is my Exam repo, to deploy laravel and its dependencies with ansible**
-## To deploy frommy control node and Install on my slave machine
-- cd to the folder
-
-run
-- ansible-playbook assignment.yml
-(it will redeploy from from my control node to the my slave machine) 
+This is my Exam repository, to deploy laravel and its dependencies using ansible from a control node to slave node
+## To deploy from a control node and to a slave machine
+* Clone this Repository
+* Set the slave node ip address in the hostname file
+* Set the mysql variable in the mysql/vars/main.yml
+* run `ansible-playbook assignment.yml` to deploy
