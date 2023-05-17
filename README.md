@@ -12,8 +12,9 @@ To deploy from a control node to a slave machine, follow these steps:
    ```
 
 2. Set the IP address of the slave node in the `hostname` file. Ensure that you have the necessary network connectivity and SSH access to the slave node.
+3. change the domainname setting in the laravel.conf file to your own domaninname
 
-3. Configure the MySQL variables in the `mysql/vars/main.yml` file according to your environment requirements.
+4. Configure the MySQL variables in the `mysql/vars/main.yml` file according to your environment requirements.
 
 4. Run the Ansible playbook to initiate the deployment:
    ```
